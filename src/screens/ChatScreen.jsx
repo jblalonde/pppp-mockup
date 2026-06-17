@@ -6,11 +6,13 @@ import TypingDots from '../components/TypingDots.jsx'
 import QuickReplies from '../components/QuickReplies.jsx'
 import PrimaryButton from '../components/PrimaryButton.jsx'
 import Composer from '../components/Composer.jsx'
+import RoutingCard from '../components/RoutingCard.jsx'
+import { routeFor, HUMAN_ROUTING } from '../data/staff.js'
 
 /**
- * Conversation scriptée : l'assistant qualifie le besoin (motif → animal)
- * puis redirige vers la prise de rendez-vous. Chaque nœud contient les
- * messages du bot et les réponses rapides proposées.
+ * Conversation scriptée : l'assistant qualifie le besoin (motif → animal),
+ * ACHEMINE la demande vers la bonne personne (carte de routage), puis redirige
+ * vers la prise de rendez-vous.
  */
 const FLOW = {
   start: {
@@ -33,10 +35,9 @@ const FLOW = {
     ],
   },
   offer: {
-    // Les messages utilisent le contexte accumulé (motif + animal).
     bot: (ctx) => [
       `Parfait — ${ctx.reason} pour ${ctx.animal}, c’est noté.`,
-      'Plusieurs de nos 8 cliniques ont des disponibilités cette semaine. Je vous montre les prochains créneaux près de chez vous ?',
+      'Je transmets votre demande à la bonne personne de l’équipe 👇',
     ],
     cta: 'Voir les disponibilités',
     replies: [{ label: 'J’ai une autre question', next: 'other' }],
@@ -45,20 +46,26 @@ const FLOW = {
     bot: [
       'Bien sûr ! Posez-moi votre question, ou touchez « Parler à un humain » en haut à tout moment.',
     ],
-    replies: [
-      { label: 'Reprendre depuis le début', next: 'start' },
-    ],
+    replies: [{ label: 'Reprendre depuis le début', next: 'start' }],
   },
+}
+
+// Motif qualifié -> libellé affichable dans la console équipe.
+const REASON_LABEL = {
+  'une consultation': 'Consultation',
+  'un vaccin': 'Vaccin',
+  'un renouvellement': 'Renouvellement de prescription',
 }
 
 let msgId = 0
 const nextId = () => ++msgId
 
-export default function ChatScreen({ onGoToBooking, onClose }) {
+export default function ChatScreen({ onGoToBooking, onClose, onRoute }) {
   const [messages, setMessages] = useState([])
   const [node, setNode] = useState(null)
   const [typing, setTyping] = useState(false)
   const ctxRef = useRef({ reason: 'une consultation', animal: 'votre animal' })
+  const routedRef = useRef(false)
   const scrollRef = useRef(null)
 
   // Joue les messages d'un nœud avec un délai "en train d'écrire…".
@@ -78,18 +85,42 @@ export default function ChatScreen({ onGoToBooking, onClose }) {
         setTimeout(pushNext, 650)
       } else {
         setNode(nodeId)
+        if (nodeId === 'offer') routeRequest()
       }
     }
     setTimeout(pushNext, 700)
   }
 
-  // Démarre la conversation au montage.
+  // Achemine la demande qualifiée : carte côté client + remontée à la console.
+  function routeRequest() {
+    const ctx = ctxRef.current
+    const { staff, why } = routeFor(ctx.reason)
+    const first = staff.name.split(' ')[0].replace('Dre', '').trim()
+    setMessages((m) => [
+      ...m,
+      {
+        id: nextId(),
+        type: 'routing',
+        staff,
+        note: `${first} prend en charge votre demande. Vous pouvez aussi réserver directement ci-dessous.`,
+      },
+    ])
+    if (!routedRef.current) {
+      routedRef.current = true
+      onRoute?.({
+        motif: REASON_LABEL[ctx.reason] ?? 'Demande',
+        animal: capitalize(ctx.animal),
+        why,
+        staffId: staff.id,
+      })
+    }
+  }
+
   useEffect(() => {
     playNode('start')
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // Garde la vue collée en bas.
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: 999999, behavior: 'smooth' })
   }, [messages, typing, node])
@@ -110,15 +141,28 @@ export default function ChatScreen({ onGoToBooking, onClose }) {
     setTyping(true)
     setTimeout(() => {
       setTyping(false)
+      const { staff, why } = HUMAN_ROUTING
       setMessages((m) => [
         ...m,
         {
           id: nextId(),
           from: 'bot',
-          text: 'Bien sûr 🤝 Je transfère votre demande à l’équipe de la réception. Une personne vous répond ici même dans quelques minutes.',
+          text: 'Bien sûr 🤝 Je transfère votre demande à l’équipe de la réception.',
+        },
+        {
+          id: nextId(),
+          type: 'routing',
+          staff,
+          note: `${staff.name.split(' ')[0]} de la réception vous répond ici dans quelques minutes.`,
         },
       ])
       setNode('other')
+      onRoute?.({
+        motif: 'Demande de contact humain',
+        animal: capitalize(ctxRef.current.animal),
+        why,
+        staffId: staff.id,
+      })
     }, 900)
   }
 
@@ -130,15 +174,18 @@ export default function ChatScreen({ onGoToBooking, onClose }) {
       <ChatHeader onTalkToHuman={handleHuman} onClose={onClose} />
 
       <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
-        {messages.map((m) => (
-          <ChatBubble key={m.id} from={m.from}>
-            {m.text}
-          </ChatBubble>
-        ))}
+        {messages.map((m) =>
+          m.type === 'routing' ? (
+            <RoutingCard key={m.id} staff={m.staff} note={m.note} />
+          ) : (
+            <ChatBubble key={m.id} from={m.from}>
+              {m.text}
+            </ChatBubble>
+          ),
+        )}
 
         {typing && <TypingDots />}
 
-        {/* Interactions du nœud courant */}
         {def && !typing && (
           <div className="space-y-3 pt-1">
             {def.cta && (
@@ -157,4 +204,8 @@ export default function ChatScreen({ onGoToBooking, onClose }) {
       <Composer />
     </div>
   )
+}
+
+function capitalize(s) {
+  return s.charAt(0).toUpperCase() + s.slice(1)
 }
