@@ -1,15 +1,22 @@
 import { useState } from 'react'
 import PhoneFrame from './components/PhoneFrame.jsx'
+import ChatScreen from './screens/ChatScreen.jsx'
 
 /**
  * App — coquille de la maquette.
  *
- * `screen` pilote l'écran affiché dans le cadre mobile. Les phases suivantes
- * brancheront ici l'écran A (chatbot) et l'écran B (réservation), ainsi que
- * le sélecteur de variantes (assistant optionnel vs porte d'entrée principale).
+ * `screen` pilote l'écran affiché dans le cadre mobile. `bookingContext` porte
+ * le motif/animal qualifiés par le chatbot vers l'écran de réservation
+ * (pré-remplissage — finalisé en Phase 4).
  */
 export default function App() {
-  const [screen] = useState('placeholder')
+  const [screen, setScreen] = useState('chat')
+  const [bookingContext, setBookingContext] = useState(null)
+
+  function goToBooking(ctx) {
+    setBookingContext(ctx)
+    setScreen('booking')
+  }
 
   return (
     <div className="flex min-h-screen flex-col items-center gap-8 bg-gradient-to-br from-cream-deep to-cream px-6 py-12">
@@ -24,24 +31,40 @@ export default function App() {
       </header>
 
       <PhoneFrame>
-        {screen === 'placeholder' && <Placeholder />}
+        {screen === 'chat' && <ChatScreen onGoToBooking={goToBooking} />}
+        {screen === 'booking' && (
+          <BookingPlaceholder
+            context={bookingContext}
+            onBack={() => setScreen('chat')}
+          />
+        )}
       </PhoneFrame>
     </div>
   )
 }
 
-/** Écran temporaire — remplacé en Phase 2. Confirme que le setup fonctionne. */
-function Placeholder() {
+/** Placeholder de l'écran de réservation — remplacé en Phase 3. */
+function BookingPlaceholder({ context, onBack }) {
   return (
-    <div className="flex h-full flex-col items-center justify-center gap-3 px-8 text-center">
+    <div className="flex h-full flex-col items-center justify-center gap-4 px-8 text-center">
       <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-100 text-3xl">
-        🐾
+        📅
       </div>
-      <h2 className="text-lg font-bold text-brand-800">Setup OK</h2>
+      <h2 className="text-lg font-bold text-brand-800">Écran de réservation</h2>
       <p className="text-sm text-neutral-500">
-        Phase 0 terminée. Les écrans chatbot et réservation arrivent aux phases
-        suivantes.
+        Contexte transmis par l’assistant&nbsp;:
+        <br />
+        <span className="font-semibold text-brand-700">
+          {context?.reason} pour {context?.animal}
+        </span>
       </p>
+      <p className="text-xs text-neutral-400">(À construire en Phase 3)</p>
+      <button
+        onClick={onBack}
+        className="mt-2 rounded-full border border-brand-300 px-4 py-2 text-sm font-bold text-brand-700"
+      >
+        ← Retour à la conversation
+      </button>
     </div>
   )
 }
