@@ -54,7 +54,7 @@ const FLOW = {
 let msgId = 0
 const nextId = () => ++msgId
 
-export default function ChatScreen({ onGoToBooking }) {
+export default function ChatScreen({ onGoToBooking, onClose }) {
   const [messages, setMessages] = useState([])
   const [node, setNode] = useState(null)
   const [typing, setTyping] = useState(false)
@@ -127,7 +127,7 @@ export default function ChatScreen({ onGoToBooking }) {
   return (
     <div className="flex h-full flex-col bg-cream">
       <StatusBar />
-      <ChatHeader onTalkToHuman={handleHuman} />
+      <ChatHeader onTalkToHuman={handleHuman} onClose={onClose} />
 
       <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
         {messages.map((m) => (
