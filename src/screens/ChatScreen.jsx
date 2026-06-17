@@ -66,29 +66,37 @@ export default function ChatScreen({ onGoToBooking, onClose, onRoute }) {
   const [typing, setTyping] = useState(false)
   const ctxRef = useRef({ reason: 'une consultation', animal: 'votre animal' })
   const routedRef = useRef(false)
+  const startedRef = useRef(false)
   const scrollRef = useRef(null)
 
-  // Joue les messages d'un nœud avec un délai "en train d'écrire…".
+  // Joue les messages d'un nœud, un par un, en montrant l'indicateur d'écriture
+  // avant CHAQUE message. Bornes sûres : on ne pousse jamais de message vide.
   function playNode(nodeId) {
     const def = FLOW[nodeId]
     const lines =
-      typeof def.bot === 'function' ? def.bot(ctxRef.current) : def.bot
+      (typeof def.bot === 'function' ? def.bot(ctxRef.current) : def.bot) ?? []
 
-    setTyping(true)
-    let i = 0
-    const pushNext = () => {
-      setTyping(false)
-      setMessages((m) => [...m, { id: nextId(), from: 'bot', text: lines[i] }])
-      i += 1
-      if (i < lines.length) {
-        setTyping(true)
-        setTimeout(pushNext, 650)
-      } else {
-        setNode(nodeId)
-        if (nodeId === 'offer') routeRequest()
-      }
+    const finish = () => {
+      setNode(nodeId)
+      if (nodeId === 'offer') routeRequest()
     }
-    setTimeout(pushNext, 700)
+    if (lines.length === 0) {
+      finish()
+      return
+    }
+
+    let i = 0
+    const showLine = () => {
+      setTyping(true)
+      setTimeout(() => {
+        setTyping(false)
+        setMessages((m) => [...m, { id: nextId(), from: 'bot', text: lines[i] }])
+        i += 1
+        if (i < lines.length) setTimeout(showLine, 300)
+        else finish()
+      }, 750)
+    }
+    showLine()
   }
 
   // Achemine la demande qualifiée : carte côté client + remontée à la console.
@@ -117,6 +125,9 @@ export default function ChatScreen({ onGoToBooking, onClose, onRoute }) {
   }
 
   useEffect(() => {
+    // Garde anti-double-exécution (StrictMode lance l'effet deux fois en dev).
+    if (startedRef.current) return
+    startedRef.current = true
     playNode('start')
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -177,15 +188,16 @@ export default function ChatScreen({ onGoToBooking, onClose, onRoute }) {
         ref={scrollRef}
         className="flex-1 space-y-3 overflow-y-auto rounded-t-3xl bg-cream px-4 py-4"
       >
-        {messages.map((m) =>
-          m.type === 'routing' ? (
-            <RoutingCard key={m.id} staff={m.staff} note={m.note} />
-          ) : (
+        {messages.map((m) => {
+          if (m.type === 'routing')
+            return <RoutingCard key={m.id} staff={m.staff} note={m.note} />
+          if (!m.text) return null // jamais de bulle vide
+          return (
             <ChatBubble key={m.id} from={m.from}>
               {m.text}
             </ChatBubble>
-          ),
-        )}
+          )
+        })}
 
         {typing && <TypingDots />}
 
