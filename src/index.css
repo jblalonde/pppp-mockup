@@ -1,14 +1,33 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,600;0,700;0,800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Nunito+Sans:wght@400;600;700;800&display=swap');
 @import 'tailwindcss';
 
 /* ---------------------------------------------------------------
-   Système visuel — ambiance "soin animalier" : chaleureuse et rassurante.
-   Vert/sarcelle apaisant + crème chaud + bleu doux en accent secondaire.
+   Système visuel — direction "soin vétérinaire premium" :
+   vert forêt profond, crème chaud, accent corail, titres en serif.
    --------------------------------------------------------------- */
 @theme {
-  --font-sans: 'Nunito', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Nunito Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Fraunces', ui-serif, Georgia, serif;
 
-  /* Couleur de marque — sarcelle apaisant */
+  /* Vert forêt (fonds sombres, boutons principaux) */
+  --color-forest: #103d37;
+  --color-forest-deep: #0b2e29;
+  --color-forest-soft: #1c4f48;
+  --color-forest-line: #2a5d55;
+
+  /* Crème (feuilles de contenu, cartes claires) */
+  --color-cream: #fbf7ef;
+  --color-cream-card: #efe8da;
+  --color-sand: #e7e1d4;
+
+  /* Corail (accent, alertes, mises en avant) */
+  --color-coral: #ee6c61;
+  --color-coral-soft: #f8ddd8;
+
+  /* Sarcelle clair pour accents secondaires sur fond sombre */
+  --color-mint: #8fc7b8;
+
+  /* Échelle "brand" alignée sur le vert de marque */
   --color-brand-50: #f0faf7;
   --color-brand-100: #d7f2e9;
   --color-brand-200: #b0e5d4;
@@ -17,15 +36,8 @@
   --color-brand-500: #2f9d82;
   --color-brand-600: #237e69;
   --color-brand-700: #1f6557;
-  --color-brand-800: #1d5147;
-  --color-brand-900: #1a443c;
-
-  /* Accent secondaire — bleu doux */
-  --color-sky-soft: #5b9bd5;
-
-  /* Fond crème chaud */
-  --color-cream: #f7f4ee;
-  --color-cream-deep: #efe9df;
+  --color-brand-800: #103d37;
+  --color-brand-900: #0b2e29;
 }
 
 html,

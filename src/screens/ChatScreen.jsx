@@ -169,11 +169,14 @@ export default function ChatScreen({ onGoToBooking, onClose, onRoute }) {
   const def = node ? FLOW[node] : null
 
   return (
-    <div className="flex h-full flex-col bg-cream">
-      <StatusBar />
+    <div className="flex h-full flex-col bg-forest">
+      <StatusBar dark />
       <ChatHeader onTalkToHuman={handleHuman} onClose={onClose} />
 
-      <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
+      <div
+        ref={scrollRef}
+        className="flex-1 space-y-3 overflow-y-auto rounded-t-3xl bg-cream px-4 py-4"
+      >
         {messages.map((m) =>
           m.type === 'routing' ? (
             <RoutingCard key={m.id} staff={m.staff} note={m.note} />

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import StatusBar from '../components/StatusBar.jsx'
+import Icon from '../components/Icon.jsx'
 import BookingHeader from '../components/BookingHeader.jsx'
 import SelectCard from '../components/SelectCard.jsx'
 import PrimaryButton from '../components/PrimaryButton.jsx'
@@ -63,8 +64,8 @@ export default function BookingScreen({ context, onBack, onRestart }) {
   }
 
   return (
-    <div className="flex h-full flex-col bg-cream">
-      <StatusBar />
+    <div className="flex h-full flex-col bg-forest">
+      <StatusBar dark />
       <BookingHeader
         title={TITLES[step]}
         step={stepIdx + 1}
@@ -72,7 +73,7 @@ export default function BookingScreen({ context, onBack, onRestart }) {
         onBack={handleBack}
       />
 
-      <div className="flex-1 space-y-2.5 overflow-y-auto px-4 py-4">
+      <div className="flex-1 space-y-2.5 overflow-y-auto rounded-t-3xl bg-cream px-4 py-4">
         {step === 'clinic' && (
           <>
             <p className="px-1 pb-1 text-xs text-neutral-500">
@@ -95,7 +96,7 @@ export default function BookingScreen({ context, onBack, onRestart }) {
         {step === 'service' && (
           <>
             {context && (
-              <div className="mb-1 flex items-center gap-2 rounded-xl bg-brand-100/70 px-3 py-2 text-xs text-brand-800">
+              <div className="mb-1 flex items-center gap-2 rounded-xl bg-coral-soft px-3 py-2 text-xs text-forest">
                 <span>✨</span>
                 <span>
                   Présélectionné d’après votre échange avec l’assistant.
@@ -128,7 +129,7 @@ export default function BookingScreen({ context, onBack, onRestart }) {
                   className={[
                     'flex w-14 shrink-0 flex-col items-center rounded-2xl border py-2.5 transition active:scale-95',
                     day === d.id
-                      ? 'border-brand-500 bg-brand-500 text-white'
+                      ? 'border-forest bg-forest text-cream'
                       : 'border-black/5 bg-white text-neutral-700',
                   ].join(' ')}
                 >
@@ -155,7 +156,7 @@ export default function BookingScreen({ context, onBack, onRestart }) {
                   className={[
                     'rounded-xl border py-2.5 text-sm font-bold transition active:scale-95',
                     slot === t
-                      ? 'border-brand-500 bg-brand-500 text-white'
+                      ? 'border-forest bg-forest text-cream'
                       : 'border-black/5 bg-white text-neutral-700 disabled:opacity-40',
                   ].join(' ')}
                 >
@@ -182,7 +183,7 @@ export default function BookingScreen({ context, onBack, onRestart }) {
         )}
       </div>
 
-      <div className="border-t border-black/5 bg-white px-4 py-3">
+      <div className="border-t border-black/5 bg-cream px-4 py-3">
         <PrimaryButton
           onClick={canContinue ? handleContinue : undefined}
         >
@@ -227,7 +228,7 @@ function Summary({ clinic, service, day, slot, context }) {
           </div>
         ))}
       </div>
-      <div className="flex items-start gap-2 rounded-xl bg-brand-100/60 px-3 py-2.5 text-xs text-brand-800">
+      <div className="flex items-start gap-2 rounded-xl bg-coral-soft px-3 py-2.5 text-xs text-forest">
         <span>💬</span>
         <span>
           Un rappel vous sera envoyé. Vous pourrez modifier ou annuler à tout
@@ -241,22 +242,22 @@ function Summary({ clinic, service, day, slot, context }) {
 /** État de succès après confirmation. */
 function Success({ clinic, onRestart }) {
   return (
-    <div className="flex h-full flex-col bg-cream">
-      <StatusBar />
+    <div className="flex h-full flex-col bg-forest">
+      <StatusBar dark />
       <div className="flex flex-1 flex-col items-center justify-center gap-4 px-8 text-center">
-        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-brand-100 text-4xl">
-          ✅
+        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-coral text-cream">
+          <Icon name="check" size={40} strokeWidth={2.4} />
         </div>
-        <h2 className="text-xl font-extrabold text-brand-800">
+        <h2 className="font-display text-2xl font-semibold text-cream">
           Rendez-vous confirmé !
         </h2>
-        <p className="text-sm text-neutral-600">
+        <p className="text-sm text-cream/75">
           Votre demande à {clinic?.name ?? 'la clinique'} est enregistrée. Vous
           recevrez une confirmation par courriel et un rappel la veille.
         </p>
         <button
           onClick={onRestart}
-          className="mt-3 rounded-full border border-brand-300 px-5 py-2.5 text-sm font-bold text-brand-700 transition hover:bg-brand-50"
+          className="mt-3 rounded-full bg-cream px-5 py-2.5 text-sm font-bold text-forest transition hover:bg-white"
         >
           Revenir à l’accueil
         </button>

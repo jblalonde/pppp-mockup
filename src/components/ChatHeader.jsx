@@ -1,48 +1,39 @@
+import Icon from './Icon.jsx'
+
 /**
- * ChatHeader — en-tête de la conversation avec branding du réseau de cliniques.
- * Le bouton "Parler à un humain" est TOUJOURS visible (point clé du cadrage :
- * garder l'option humaine accessible en tout temps).
+ * ChatHeader — en-tête forêt de la conversation. Branding + statut.
+ * Le bouton "Parler à un humain" est TOUJOURS visible (garder l'option
+ * humaine accessible en tout temps). `onClose` (optionnel) ferme le chat.
  */
 export default function ChatHeader({ onTalkToHuman, onClose }) {
   return (
-    <div className="sticky top-0 z-10 border-b border-black/5 bg-white/90 px-4 py-3 backdrop-blur">
+    <div className="bg-forest px-4 pb-3 pt-1">
       <div className="flex items-center gap-3">
         {onClose && (
           <button
             onClick={onClose}
-            className="-ml-1 flex h-9 w-9 items-center justify-center rounded-full text-brand-700 transition hover:bg-brand-50 active:scale-95"
+            className="-ml-1 flex h-9 w-9 items-center justify-center rounded-full text-mint transition active:scale-95"
             aria-label="Fermer"
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M15 18l-6-6 6-6"
-                stroke="currentColor"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <Icon name="chevronLeft" size={22} strokeWidth={2.2} />
           </button>
         )}
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-100 text-xl">
-          🐾
+        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-forest-soft text-mint">
+          <Icon name="paw" size={20} />
         </div>
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-1.5">
-            <h1 className="truncate text-[15px] font-extrabold text-brand-800">
-              VétéSoin
-            </h1>
-            <span className="inline-block h-2 w-2 rounded-full bg-brand-400" />
-          </div>
-          <p className="truncate text-xs text-neutral-500">
-            Assistant · répond en quelques secondes
+          <h1 className="truncate font-display text-[17px] font-semibold text-cream">
+            Assistant VétéSoin
+          </h1>
+          <p className="flex items-center gap-1.5 truncate text-xs text-mint">
+            <span className="inline-block h-1.5 w-1.5 rounded-full bg-mint" />
+            En ligne · répond en quelques secondes
           </p>
         </div>
         <button
           onClick={onTalkToHuman}
-          className="flex shrink-0 items-center gap-1.5 rounded-full border border-brand-200 bg-white px-3 py-1.5 text-xs font-bold text-brand-700 transition hover:bg-brand-50 active:scale-95"
+          className="shrink-0 rounded-full bg-cream px-3 py-1.5 text-xs font-bold text-forest transition hover:bg-white active:scale-95"
         >
-          <span className="text-sm">💬</span>
           Parler à un humain
         </button>
       </div>

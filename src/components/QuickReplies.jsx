@@ -9,7 +9,7 @@ export default function QuickReplies({ options, onSelect }) {
         <button
           key={opt.label}
           onClick={() => onSelect(opt)}
-          className="rounded-full border border-brand-300 bg-white px-3.5 py-2 text-[13px] font-bold text-brand-700 transition hover:bg-brand-50 active:scale-95"
+          className="rounded-full border border-forest/25 bg-white px-3.5 py-2 text-[13px] font-bold text-forest transition hover:bg-cream-card active:scale-95"
         >
           {opt.label}
         </button>

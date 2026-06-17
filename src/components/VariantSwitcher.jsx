@@ -21,7 +21,7 @@ export default function VariantSwitcher({ value, onChange }) {
   const active = VARIANTS.find((v) => v.id === value)
   return (
     <div className="w-full max-w-md">
-      <p className="mb-2 text-center text-xs font-bold uppercase tracking-wide text-neutral-400">
+      <p className="mb-2 text-center text-xs font-bold uppercase tracking-wide text-forest/40">
         Niveau d’intervention du chatbot
       </p>
       <div className="flex gap-1 rounded-2xl bg-white p-1 shadow-sm">
@@ -32,15 +32,15 @@ export default function VariantSwitcher({ value, onChange }) {
             className={[
               'flex-1 rounded-xl px-3 py-2.5 text-sm font-bold transition',
               value === v.id
-                ? 'bg-brand-600 text-white shadow'
-                : 'text-neutral-500 hover:bg-brand-50',
+                ? 'bg-forest text-cream shadow'
+                : 'text-forest/50 hover:bg-cream-card',
             ].join(' ')}
           >
             {v.title}
           </button>
         ))}
       </div>
-      <p className="mt-2 text-center text-sm text-neutral-600">{active?.blurb}</p>
+      <p className="mt-2 text-center text-sm text-forest/70">{active?.blurb}</p>
     </div>
   )
 }

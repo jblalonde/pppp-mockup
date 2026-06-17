@@ -4,8 +4,8 @@
  */
 export default function RoutingCard({ staff, note }) {
   return (
-    <div className="rounded-2xl border border-brand-200 bg-white p-3.5 shadow-sm">
-      <div className="mb-2.5 flex items-center gap-1.5 text-xs font-bold text-brand-600">
+    <div className="rounded-2xl border-l-4 border-coral bg-white p-3.5 shadow-sm">
+      <div className="mb-2.5 flex items-center gap-1.5 text-xs font-bold text-coral">
         <span>✅</span>
         <span>Demande acheminée</span>
       </div>
@@ -16,13 +16,13 @@ export default function RoutingCard({ staff, note }) {
           {staff.emoji}
         </div>
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-extrabold text-neutral-800">
+          <p className="truncate text-sm font-extrabold text-forest">
             {staff.name}
           </p>
           <p className="truncate text-xs text-neutral-500">{staff.role}</p>
         </div>
       </div>
-      <p className="mt-2.5 rounded-lg bg-cream-deep px-3 py-2 text-xs text-neutral-600">
+      <p className="mt-2.5 rounded-lg bg-cream-card px-3 py-2 text-xs text-neutral-600">
         {note}
       </p>
     </div>

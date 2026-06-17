@@ -1,27 +1,21 @@
+import Icon from './Icon.jsx'
+
 /**
- * BookingHeader — en-tête de l'écran de réservation : retour, titre et
- * progression (barre segmentée selon l'étape courante).
+ * BookingHeader — en-tête forêt de la réservation : retour, titre (serif) et
+ * progression segmentée.
  */
 export default function BookingHeader({ title, step, total, onBack }) {
   return (
-    <div className="sticky top-0 z-10 border-b border-black/5 bg-white/90 px-4 pb-3 pt-1 backdrop-blur">
+    <div className="bg-forest px-4 pb-4 pt-1">
       <div className="flex items-center gap-2">
         <button
           onClick={onBack}
-          className="flex h-9 w-9 items-center justify-center rounded-full text-brand-700 transition hover:bg-brand-50 active:scale-95"
+          className="flex h-9 w-9 items-center justify-center rounded-full text-mint transition active:scale-95"
           aria-label="Retour"
         >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <path
-              d="M15 18l-6-6 6-6"
-              stroke="currentColor"
-              strokeWidth="2.2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <Icon name="chevronLeft" size={22} strokeWidth={2.2} />
         </button>
-        <h1 className="flex-1 text-[15px] font-extrabold text-brand-800">
+        <h1 className="flex-1 font-display text-[18px] font-semibold text-cream">
           {title}
         </h1>
       </div>
@@ -31,7 +25,7 @@ export default function BookingHeader({ title, step, total, onBack }) {
             <span
               key={i}
               className={`h-1.5 flex-1 rounded-full transition ${
-                i < step ? 'bg-brand-500' : 'bg-brand-100'
+                i < step ? 'bg-coral' : 'bg-forest-line'
               }`}
             />
           ))}

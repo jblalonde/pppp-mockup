@@ -4,7 +4,7 @@
  */
 const VIEWS = [
   { id: 'client', icon: '📱', label: 'Expérience client' },
-  { id: 'team', icon: '🖥️', label: 'Console équipe' },
+  { id: 'team', icon: '📨', label: 'Réception équipe' },
 ]
 
 export default function PerspectiveSwitcher({ value, onChange, badge = 0 }) {
@@ -17,14 +17,14 @@ export default function PerspectiveSwitcher({ value, onChange, badge = 0 }) {
           className={[
             'relative flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold transition',
             value === v.id
-              ? 'bg-brand-600 text-white'
-              : 'text-neutral-500 hover:bg-brand-50',
+              ? 'bg-forest text-cream'
+              : 'text-forest/50 hover:bg-cream-card',
           ].join(' ')}
         >
           <span>{v.icon}</span>
           {v.label}
           {v.id === 'team' && badge > 0 && (
-            <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-rose-500 px-1.5 text-[11px] font-bold text-white">
+            <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-coral px-1.5 text-[11px] font-bold text-cream">
               {badge}
             </span>
           )}

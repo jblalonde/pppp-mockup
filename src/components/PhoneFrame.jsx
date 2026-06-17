@@ -8,7 +8,7 @@ export default function PhoneFrame({ children }) {
       {/* Encoche */}
       <div className="absolute left-1/2 top-[10px] z-20 h-[26px] w-[140px] -translate-x-1/2 rounded-b-2xl bg-neutral-900" />
       {/* Écran */}
-      <div className="relative h-full w-full overflow-hidden rounded-[36px] bg-cream">
+      <div className="relative h-full w-full overflow-hidden rounded-[36px] bg-forest">
         <div className="h-full w-full overflow-y-auto">{children}</div>
       </div>
     </div>

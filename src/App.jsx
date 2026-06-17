@@ -69,14 +69,14 @@ export default function App() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center gap-6 bg-gradient-to-br from-cream-deep to-cream px-6 py-10">
+    <div className="flex min-h-screen flex-col items-center gap-6 bg-sand px-6 py-10">
       <header className="text-center">
-        <h1 className="text-2xl font-extrabold text-brand-800">
+        <h1 className="font-display text-3xl font-semibold text-forest">
           Réseau Vétérinaire — Maquette
         </h1>
-        <p className="mt-1 max-w-xl text-sm text-neutral-600">
-          Le même flux, vu des deux côtés : l’expérience du client et la console
-          où aboutissent les demandes acheminées par l’assistant.
+        <p className="mt-1 max-w-xl text-sm text-forest/60">
+          Le même flux, vu des deux côtés : l’expérience du client et la boîte de
+          réception où aboutissent les demandes acheminées par l’assistant.
         </p>
       </header>
 
@@ -86,10 +86,15 @@ export default function App() {
         badge={unseen}
       />
 
-      {perspective === 'client' ? (
-        <>
-          <VariantSwitcher value={variant} onChange={changeVariant} />
-          <PhoneFrame>
+      {perspective === 'client' && (
+        <VariantSwitcher value={variant} onChange={changeVariant} />
+      )}
+
+      <PhoneFrame>
+        {perspective === 'team' ? (
+          <TeamDashboard requests={requests} />
+        ) : (
+          <>
             {screen === 'home' && (
               <HomeScreen
                 onBook={() => goToBooking(null)}
@@ -112,22 +117,21 @@ export default function App() {
                 onRestart={restart}
               />
             )}
-          </PhoneFrame>
-          {unseen > 0 && (
-            <p className="text-center text-xs text-neutral-500">
-              ✨ Demande acheminée — ouvrez la{' '}
-              <button
-                onClick={() => changePerspective('team')}
-                className="font-bold text-brand-700 underline"
-              >
-                Console équipe
-              </button>{' '}
-              pour la voir arriver.
-            </p>
-          )}
-        </>
-      ) : (
-        <TeamDashboard requests={requests} />
+          </>
+        )}
+      </PhoneFrame>
+
+      {perspective === 'client' && unseen > 0 && (
+        <p className="max-w-xs text-center text-xs text-forest/60">
+          ✨ Demande acheminée — ouvrez la{' '}
+          <button
+            onClick={() => changePerspective('team')}
+            className="font-bold text-coral underline"
+          >
+            boîte de réception équipe
+          </button>{' '}
+          pour la voir arriver.
+        </p>
       )}
     </div>
   )
