@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,600;0,700;0,800&display=swap');
+@import 'tailwindcss';
+
+/* ---------------------------------------------------------------
+   Système visuel — ambiance "soin animalier" : chaleureuse et rassurante.
+   Vert/sarcelle apaisant + crème chaud + bleu doux en accent secondaire.
+   --------------------------------------------------------------- */
+@theme {
+  --font-sans: 'Nunito', ui-sans-serif, system-ui, sans-serif;
+
+  /* Couleur de marque — sarcelle apaisant */
+  --color-brand-50: #f0faf7;
+  --color-brand-100: #d7f2e9;
+  --color-brand-200: #b0e5d4;
+  --color-brand-300: #7fd2bb;
+  --color-brand-400: #4cb89c;
+  --color-brand-500: #2f9d82;
+  --color-brand-600: #237e69;
+  --color-brand-700: #1f6557;
+  --color-brand-800: #1d5147;
+  --color-brand-900: #1a443c;
+
+  /* Accent secondaire — bleu doux */
+  --color-sky-soft: #5b9bd5;
+
+  /* Fond crème chaud */
+  --color-cream: #f7f4ee;
+  --color-cream-deep: #efe9df;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
