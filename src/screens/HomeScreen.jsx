@@ -1,6 +1,8 @@
+import { useState } from 'react'
 import StatusBar from '../components/StatusBar.jsx'
 import Icon from '../components/Icon.jsx'
 import BottomTabBar from '../components/BottomTabBar.jsx'
+import CallSheet from '../components/CallSheet.jsx'
 
 /**
  * HomeScreen — accueil "Soins" (variante 1 : assistant optionnel).
@@ -16,17 +18,19 @@ const TABS = [
 ]
 
 export default function HomeScreen({ onBook, onOpenChat }) {
+  const [showCall, setShowCall] = useState(false)
+
   const actions = [
     { id: 'standard', icon: 'bag', title: 'Visite standard', sub: 'Sur rendez-vous', onClick: onBook },
     { id: 'urgent', icon: 'alert', title: 'Urgence', sub: 'Aujourd’hui ou demain', accent: true, onClick: onBook },
     { id: 'chat', icon: 'chat', title: 'Clavardage', sub: 'Écrire à l’assistant', onClick: onOpenChat },
-    { id: 'phone', icon: 'phone', title: 'Appel', sub: 'Nous joindre', onClick: onBook },
+    { id: 'phone', icon: 'phone', title: 'Appel', sub: 'Nous joindre', onClick: () => setShowCall(true) },
     { id: 'video', icon: 'video', title: 'Téléconsultation', sub: 'Par vidéo', onClick: onBook },
     { id: 'rx', icon: 'pill', title: 'Renouvellement', sub: 'Prescriptions', onClick: onBook },
   ]
 
   return (
-    <div className="flex h-full flex-col bg-forest">
+    <div className="relative flex h-full flex-col bg-forest">
       <StatusBar dark />
 
       {/* En-tête forêt */}
@@ -104,6 +108,16 @@ export default function HomeScreen({ onBook, onOpenChat }) {
       </div>
 
       <BottomTabBar tabs={TABS} active="care" />
+
+      {showCall && (
+        <CallSheet
+          onClose={() => setShowCall(false)}
+          onTalkToHuman={() => {
+            setShowCall(false)
+            onOpenChat()
+          }}
+        />
+      )}
     </div>
   )
 }
